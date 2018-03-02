@@ -46,7 +46,8 @@ const view = {
 };
 
 const game = {
-	start(quiz) {
+	start() {
+		console.log('start() invoked');
 		this.secondsRemaining = 20;
 		this.timer = setInterval(this.coundtown, 1000);
 		this.questions = [...quiz];
@@ -55,7 +56,8 @@ const game = {
 		this.ask();
 	},
 
-	ask(name) {
+	ask() {
+		console.log('ask() invoked');
 		if (this.questions.length > 0) {
 			this.question = this.questions.pop();
 			const question = `What is ${this.question.name}'s real name?`;
@@ -66,6 +68,7 @@ const game = {
 	},
 
 	check(event) {
+		console.log('check() invoked');
 		event.preventDefault();
 		const response = view.response.answer.value;
 		const answer = this.question.realName;
@@ -89,12 +92,13 @@ const game = {
 	},
 
 	gameOver() {
+		console.log('gameOver() invoked');
 		view.render(view.info, `Game Over...you scored ${this.score} point${this.score !== 1 ? 's' : ''}!`);
 		view.teardown();
 		clearInterval(this.timer);
 	}
 };
 
-view.start.addEventListener('click', () => game.start(quiz), false);
+view.start.addEventListener('click', () => game.start(), false);
 view.response.addEventListener('submit', (event) => game.check(event), false);
 view.hide(view.response);
