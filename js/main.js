@@ -2,6 +2,9 @@ const quiz = [
 	{ name: "Superman", realName: "Clark Kent" },
 	{ name: "Wonder Woman", realName: "Diana Prince" },
 	{ name: "Batman", realName: "Bruce Wayne" },
+	{ name: "The Hulk", realName: "Bruce Banner" },
+	{ name: "Spiderman", realName: "Peter Parker" },
+	{ name: "Deadpool", realName: "Wade Wilson" }
 ];
 
 function random(a, b=1) {
@@ -38,6 +41,9 @@ const view = {
 	hide(element) {
 		element.display = 'none';
 	},
+	buttons(array) {
+		return array.map(value => `<button>${value}</button>`).join('');
+	},
 	setup() {
 		this.show(this.question);
 		this.show(this.response);
@@ -46,16 +52,11 @@ const view = {
 		this.render(this.score, game.score);
 		this.render(this.result, '');
 		this.render(this.info, '');
-		this.resetForm();
 	},
 	teardown() {
 		this.hide(this.question);
 		this.hide(this.response);
 		this.show(this.start);
-	},
-	resetForm() {
-		this.response.answer.value = '';
-		this.response.answer.focus();
 	}
 };
 
@@ -72,11 +73,14 @@ const game = {
 
 	ask() {
 		console.log('ask() invoked');
-		if (this.questions.length > 0) {
+		if (this.questions.length > 2) {
 			shuffle(this.questions);
 			this.question = this.questions.pop();
+			const options = [this.questions[0].realName, this.questions[1].realName, this.question.realName]
+			shuffle(options);
 			const question = `What is ${this.question.name}'s real name?`;
 			view.render(view.question, question);
+			view.render(view.response, view.buttons(options));
 		} else {
 			this.gameOver();
 		}
@@ -84,8 +88,7 @@ const game = {
 
 	check(event) {
 		console.log('check() invoked');
-		event.preventDefault();
-		const response = view.response.answer.value;
+		const response = event.target.textContent;
 		const answer = this.question.realName;
 		if (response === answer) {
 			view.render(view.result, 'Correct!', {'class':'correct'});
@@ -94,7 +97,6 @@ const game = {
 		} else {
 			view.render(view.result, `Wrong! The correct answer is ${answer}.`, {'class':'wrong'});
 		}
-		view.resetForm();
 		this.ask();
 	},
 
@@ -115,5 +117,4 @@ const game = {
 };
 
 view.start.addEventListener('click', () => game.start(), false);
-view.response.addEventListener('submit', (event) => game.check(event), false);
-view.hide(view.response);
+view.response.addEventListener('click', (event) => game.check(event), false);
