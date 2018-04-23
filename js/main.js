@@ -7,6 +7,17 @@ const quiz = [
 	{ name: "Deadpool", realName: "Wade Wilson" }
 ];
 
+//this code can't be used because the json page isn't available
+/*
+const url = 'http://spbooks.github.io/questions.json';
+fetch(url)
+.then(res => res.json())
+.then(quiz => {
+	view.start.addEventListener('click', () => game.start(quiz.questions), false);
+	view.response.addEventListener('click', (event) => game.check(event), false);
+});
+*/
+
 function random(a, b=1) {
 	if (b === 1) {
 		[a,b] = [b,a];
